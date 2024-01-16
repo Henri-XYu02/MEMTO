@@ -155,6 +155,143 @@ class MSLSegLoader(Dataset):
         else:
             return np.float32(self.train[index:index + self.win_size]), np.float32(self.test_labels[0:self.win_size])
 
+class b9k1SegLoader(Dataset):
+    def __init__(self, data_path, win_size, step, mode="train"):
+        self.mode = mode
+        self.step = step
+        self.win_size = win_size
+        self.scaler = StandardScaler()
+        data = np.load(data_path + "/b9k1_train.npy", allow_pickle=True)
+        print(data.shape)
+        
+        data = np.reshape(data, (win_size * data.shape[0], 4))
+        self.scaler.fit(data)
+        data = self.scaler.transform(data)
+        data = np.reshape(data, (-1, win_size, 4))
+        
+        test_data = np.load(data_path + "/b9k1_test.npy", allow_pickle=True)
+        print(test_data.shape)
+        test_data = np.reshape(test_data, (win_size*test_data.shape[0], 4))
+        self.test = self.scaler.transform(test_data).reshape(-1, win_size, 4)
+
+        self.train = data
+        self.test_labels = np.load(data_path + "/b9k1_test_label.npy", allow_pickle=True)
+        
+        print(self.test_labels.shape)
+        print("test:", self.test.shape)
+        print("train:", self.train.shape)
+
+    def __len__(self):
+
+        if self.mode == "train":
+            return self.train.shape[0]
+        elif (self.mode == 'test'):
+            return self.test.shape[0]
+        else:
+            return self.train.shape[0]
+
+    def __getitem__(self, index):
+        index = index
+        if self.mode == "train":
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+        elif (self.mode == 'test'):
+            return np.float32(self.test[index]), np.float32(
+                self.test_labels[index])
+        else:
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+
+class k9l1SegLoader(Dataset):
+    def __init__(self, data_path, win_size, step, mode="train"):
+        self.mode = mode
+        self.step = step
+        self.win_size = win_size
+        self.scaler = StandardScaler()
+        data = np.load(data_path + "/k9l1_train.npy", allow_pickle=True)
+        print(data.shape)
+        
+        data = np.reshape(data, (win_size * data.shape[0], 4))
+        self.scaler.fit(data)
+        data = self.scaler.transform(data)
+        data = np.reshape(data, (-1, win_size, 4))
+        
+        test_data = np.load(data_path + "/k9l1_test.npy", allow_pickle=True)
+        print(test_data.shape)
+        test_data = np.reshape(test_data, (win_size*test_data.shape[0], 4))
+        self.test = self.scaler.transform(test_data).reshape(-1, win_size, 4)
+
+        self.train = data
+        self.test_labels = np.load(data_path + "/k9l1_test_label.npy", allow_pickle=True)
+        
+        print(self.test_labels.shape)
+        print("test:", self.test.shape)
+        print("train:", self.train.shape)
+
+    def __len__(self):
+
+        if self.mode == "train":
+            return self.train.shape[0]
+        elif (self.mode == 'test'):
+            return self.test.shape[0]
+        else:
+            return self.train.shape[0]
+
+    def __getitem__(self, index):
+        index = index
+        if self.mode == "train":
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+        elif (self.mode == 'test'):
+            return np.float32(self.test[index]), np.float32(
+                self.test_labels[index])
+        else:
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+
+
+class l9b1SegLoader(Dataset):
+    def __init__(self, data_path, win_size, step, mode="train"):
+        self.mode = mode
+        self.step = step
+        self.win_size = win_size
+        self.scaler = StandardScaler()
+        data = np.load(data_path + "/l9b1_train.npy", allow_pickle=True)
+        print(data.shape)
+        
+        data = np.reshape(data, (win_size * data.shape[0], 4))
+        self.scaler.fit(data)
+        data = self.scaler.transform(data)
+        data = np.reshape(data, (-1, win_size, 4))
+        
+        test_data = np.load(data_path + "/l9b1_test.npy", allow_pickle=True)
+        print(test_data.shape)
+        test_data = np.reshape(test_data, (win_size*test_data.shape[0], 4))
+        self.test = self.scaler.transform(test_data).reshape(-1, win_size, 4)
+
+        self.train = data
+        self.test_labels = np.load(data_path + "/l9b1_test_label.npy", allow_pickle=True)
+        
+        print(self.test_labels.shape)
+        print("test:", self.test.shape)
+        print("train:", self.train.shape)
+
+    def __len__(self):
+
+        if self.mode == "train":
+            return self.train.shape[0]
+        elif (self.mode == 'test'):
+            return self.test.shape[0]
+        else:
+            return self.train.shape[0]
+
+    def __getitem__(self, index):
+        index = index
+        if self.mode == "train":
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+        elif (self.mode == 'test'):
+            return np.float32(self.test[index]), np.float32(
+                self.test_labels[index])
+        else:
+            return np.float32(self.train[index]), np.float32(self.test_labels[0])
+
+
 class SMAPSegLoader(Dataset):
     def __init__(self, data_path, win_size, step, mode="train"):
         self.mode = mode
@@ -228,7 +365,7 @@ class SMDSegLoader(Dataset):
             return np.float32(self.train[index:index + self.win_size]), np.float32(self.test_labels[0:self.win_size])
 
 
-def get_loader_segment(data_path, batch_size, win_size=100, step=100, mode='train', dataset='KDD', val_ratio=0.2):
+def get_loader_segment(data_path, batch_size, win_size=100, step=100, mode='train', dataset='KDD', val_ratio=0.1):
     '''
     model : 'train' or 'test'
     '''
@@ -242,6 +379,12 @@ def get_loader_segment(data_path, batch_size, win_size=100, step=100, mode='trai
         dataset = PSMSegLoader(data_path, win_size, step, mode)
     elif (dataset == 'SWaT'):
         dataset = SWaTSegLoader(data_path, win_size, step, mode)
+    elif (dataset == 'b9k1'):
+        dataset = b9k1SegLoader(data_path, win_size, step, mode)
+    elif (dataset == 'k9l1'):
+        dataset = k9l1SegLoader(data_path, win_size, step, mode) 
+    elif (dataset == 'l9b1'):
+        dataset = l9b1SegLoader(data_path, win_size, step, mode)
 
     shuffle = False
     if mode == 'train':

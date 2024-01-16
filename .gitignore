@@ -1,0 +1,10 @@
+/__pycache__/
+/.vscode/
+/checkpoints/
+/data_factory/__pycache__/
+/data_factory/SIM/__pycache__/
+/data_factory/SIM/b9k1/
+/data_factory/SIM/k9l1/
+/data_factory/SIM/l9b1/
+/memory_item/
+/model/__pycache__/

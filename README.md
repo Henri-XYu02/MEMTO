@@ -1,3 +1,5 @@
+# Run make_np_train.py to slice SIM data
+
 # MEMTO (NeurIPS 2023)
 MEMTO: Memory-guided Transformer for Multivariate Time Series Anomaly Detection
 

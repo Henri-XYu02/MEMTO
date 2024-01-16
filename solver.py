@@ -196,9 +196,9 @@ class Solver(object):
                 
                 self.optimizer.zero_grad()
                 iter_count += 1
-                input = input_data.float().to(self.device)    
+                input = input_data.float().to(self.device)
                 output_dict = self.model(input_data)
-                
+                # output, memory_item_embedding, queries, mem_items = output_dict['out'], output_dict['memory_item_embedding'], output_dict['queries'], output_dict["mem"]
                 output, memory_item_embedding, queries, mem_items, attn = output_dict['out'], output_dict['memory_item_embedding'], output_dict['queries'], output_dict["mem"], output_dict['attn']
 
                 rec_loss = self.criterion(output, input)
@@ -215,11 +215,11 @@ class Solver(object):
                     print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
                     iter_count = 0
                     time_now = time.time()
-                try:
+                # try:
                     loss.mean().backward()
                     
-                except:
-                    import pdb; pdb.set_trace()
+                # except:
+                #    import pdb; pdb.set_trace()
                 self.optimizer.step()
 
             print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))

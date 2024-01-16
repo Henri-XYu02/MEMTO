@@ -26,14 +26,14 @@ class TokenEmbedding(nn.Module):
         super(TokenEmbedding, self).__init__()
         pad = 1 if torch.__version__ >= '1.5.0' else 2
         self.conv = nn.Conv1d(in_channels=in_dim, out_channels=d_model, kernel_size=3, padding=pad, 
-                              padding_mode='circular', bias=False)
+                              padding_mode='circular', bias=False).cuda()
         
         for m in self.modules():
             if isinstance(m, nn.Conv1d):
                 nn.init.kaiming_normal_(m.weight, mode='fan_in', nonlinearity='leaky_relu')
 
     def forward(self, x):
-        x = self.conv(x.permute(0, 2, 1)).transpose(1, 2)
+        x = self.conv(x.permute(0, 2, 1).cuda()).transpose(1, 2)
         
         return x
 
@@ -49,8 +49,8 @@ class InputEmbedding(nn.Module):
 
     def forward(self, x):
         
-        try:
-            x = self.token_embedding(x) + self.pos_embedding(x).cuda()
-        except:
-            import pdb; pdb.set_trace()
+        # try:
+        x = (self.token_embedding(x).cuda() + self.pos_embedding(x).cuda())
+        # except:
+        #     import pdb; pdb.set_trace()
         return self.dropout(x)

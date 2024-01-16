@@ -44,11 +44,11 @@ class AttentionLayer(nn.Module):
         self.d_model = d_model  # d_model = C
 
         # Linear projections to Q, K, V
-        self.W_Q = nn.Linear(self.d_model, self.n_heads * self.d_keys)
-        self.W_K = nn.Linear(self.d_model, self.n_heads * self.d_keys)
-        self.W_V = nn.Linear(self.d_model, self.n_heads * self.d_values)
+        self.W_Q = nn.Linear(self.d_model, self.n_heads * self.d_keys).cuda()
+        self.W_K = nn.Linear(self.d_model, self.n_heads * self.d_keys).cuda()
+        self.W_V = nn.Linear(self.d_model, self.n_heads * self.d_values).cuda()
 
-        self.out_proj = nn.Linear(self.n_heads * self.d_values, self.d_model)
+        self.out_proj = nn.Linear(self.n_heads * self.d_values, self.d_model).cuda()
 
         self.attn = Attention(window_size=window_size, mask_flag=mask_flag, scale=scale, dropout=dropout)
 

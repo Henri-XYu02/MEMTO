@@ -17,10 +17,10 @@ class EncoderLayer(nn.Module):
         super(EncoderLayer, self).__init__()
         d_ff = d_ff if d_ff is not None else 4 * d_model
         self.attn_layer = attn
-        self.conv1 = nn.Conv1d(in_channels=d_model, out_channels=d_ff, kernel_size=1)
-        self.conv2 = nn.Conv1d(in_channels=d_ff, out_channels=d_model, kernel_size=1)
-        self.norm1 = nn.LayerNorm(d_model)
-        self.norm2 = nn.LayerNorm(d_model)
+        self.conv1 = nn.Conv1d(in_channels=d_model, out_channels=d_ff, kernel_size=1).cuda()
+        self.conv2 = nn.Conv1d(in_channels=d_ff, out_channels=d_model, kernel_size=1).cuda()
+        self.norm1 = nn.LayerNorm(d_model).cuda()
+        self.norm2 = nn.LayerNorm(d_model).cuda()
         self.dropout = nn.Dropout(p=dropout)
         self.activation = F.relu if activation == 'relu' else F.gelu
 
@@ -61,16 +61,16 @@ class Decoder(nn.Module):
         super(Decoder, self).__init__()
         # self.decoder_layer = nn.LSTM(input_size=d_model, hidden_size=d_model, num_layers=2,
         #                              batch_first=True, bidirectional=True)
-        self.out_linear = nn.Linear(d_model, c_out)
+        self.out_linear = nn.Linear(d_model, c_out).cuda()
         d_ff = d_ff if d_ff is not None else 4 * d_model
-        self.decoder_layer1 = nn.Conv1d(in_channels=d_model, out_channels=d_ff, kernel_size=1)
+        self.decoder_layer1 = nn.Conv1d(in_channels=d_model, out_channels=d_ff, kernel_size=1).cuda()
 
         # self.decoder_layer_add = nn.Conv1d(in_channels=d_ff, out_channels=d_ff, kernel_size=1)
 
-        self.decoder_layer2 = nn.Conv1d(in_channels=d_ff, out_channels=c_out, kernel_size=1)
+        self.decoder_layer2 = nn.Conv1d(in_channels=d_ff, out_channels=c_out, kernel_size=1).cuda()
         self.activation = F.relu if activation == 'relu' else F.gelu
         self.dropout = nn.Dropout(p=dropout)
-        self.batchnorm = nn.BatchNorm1d(d_ff)
+        self.batchnorm = nn.BatchNorm1d(d_ff).cuda()
 
     def forward(self, x):
         '''
@@ -112,12 +112,12 @@ class TransformerVar(nn.Module):
                     ), d_model, d_ff, dropout=dropout, activation=activation
                 ) for _ in range(e_layers)
             ],
-            norm_layer = nn.LayerNorm(d_model)
+            norm_layer = nn.LayerNorm(d_model).cuda()
         )
 
+        #这一行后mem消失了
         self.mem_module = MemoryModule(n_memory=n_memory, fea_dim=d_model, shrink_thres=shrink_thres, device=device, memory_init_embedding=memory_init_embedding, phase_type=phase_type, dataset_name=dataset_name)
         
-
         # ours
         self.weak_decoder = Decoder(2* d_model, c_out, d_ff=d_ff, activation='gelu', dropout=0.1)
 

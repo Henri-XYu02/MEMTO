@@ -15,8 +15,8 @@ class MemoryModule(nn.Module):
         self.phase_type = phase_type
         self.memory_init_embedding = memory_init_embedding
         
-        self.U = nn.Linear(fea_dim, fea_dim)
-        self.W = nn.Linear(fea_dim, fea_dim)
+        self.U = nn.Linear(fea_dim, fea_dim).cuda()
+        self.W = nn.Linear(fea_dim, fea_dim).cuda()
         
         # mem (memory items) : M x C
         # first train -> memory_initial : False / memory_init_embedding : None
