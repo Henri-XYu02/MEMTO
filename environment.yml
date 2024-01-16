@@ -1,0 +1,13 @@
+name: memto
+channels:
+  - pytorch
+  - conda-forge
+  - nvidia
+dependencies:
+  - python=3.11.* 
+  - pip
+  - ffmpeg=5.*
+  - poetry=1.*
+  - conda-lock=1.*
+  - pytorch::pytorch=2.1.*
+  - pytorch::pytorch-cuda=11.*
